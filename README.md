@@ -1,6 +1,6 @@
 # xi-qt
 
-A xi-core front-end base on QT5.
+A xi-editor front-end base on QT5.
 
 ![C++ source](http://sw5cc.github.io/static/xi-qt/code.gif)
 
