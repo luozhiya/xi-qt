@@ -7,7 +7,7 @@ A Qt front-end for xi-editor.
 
 What's being worked on now
 --------------------------
-* porting xi-mac to xi-qt (learn rpc by doing)
+* Porting xi-mac to xi-qt (learn rpc by doing)
 
 Roadmap
 ---------------
