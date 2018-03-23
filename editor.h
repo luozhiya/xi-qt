@@ -73,6 +73,7 @@ class Editor : public QWidget
     Q_OBJECT
 public:
     Editor(XiBridge* bridge, const EditorOption& option, QWidget *parent = nullptr);
+    void init();
     void new_view(QString file = "");
     void setOption(const EditorOption& option);
     static EditorOption getDefaultOption();
@@ -100,9 +101,9 @@ private:
 
     QVector<QPoint> m_cursors;
     QLabel *m_imeComposition;
-    EditorOption m_option;
     XiBridge *m_bridge;
     LineCache m_cache;
+    EditorOption m_option;
 };
 }
 

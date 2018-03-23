@@ -40,9 +40,10 @@ void MainWindow::init()
 {
     xi::EditorOption option = xi::Editor::getDefaultOption();
     bridge_ = new xi::XiBridge();
-    bridge_->spawn();
     editor_ = new xi::Editor(bridge_, option);
     bridge_->init(editor_);
+    bridge_->spawn();
+    editor_->init();
 
     stack_.insertWidget(1, editor_);
     stack_.setCurrentIndex(1);

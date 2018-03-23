@@ -5,6 +5,10 @@ A Qt front-end for xi-editor.
 ![C++ source](http://sw5cc.github.io/static/xi-qt/code.gif)
 
 
+What's being worked on now
+--------------------------
+* porting xi-mac to xi-qt (learn rpc by doing)
+
 Roadmap
 ---------------
 * Scroll

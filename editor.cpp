@@ -105,7 +105,12 @@ LineCache::OpType LineCache::opType(QString name)
 }
 
 Editor::Editor(XiBridge *bridge, const EditorOption& option, QWidget *parent)
-    :QWidget(parent), m_bridge(bridge)
+    :QWidget(parent), m_bridge(bridge), m_option(option)
+{
+
+}
+
+void Editor::init()
 {
     setAttribute(Qt::WA_OpaquePaintEvent);
     setAttribute(Qt::WA_KeyCompression, false);
@@ -120,7 +125,7 @@ Editor::Editor(XiBridge *bridge, const EditorOption& option, QWidget *parent)
     m_imeComposition->setTextInteractionFlags(Qt::NoTextInteraction);
     m_imeComposition->setAutoFillBackground(true);
 
-    setOption(option);
+    setOption(m_option);
     connect(m_bridge, SIGNAL(jsonAvailable(const QJsonObject&)), this, SLOT(updateEditorCache(const QJsonObject&)));
     new_view();
 }
