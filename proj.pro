@@ -28,10 +28,6 @@ SOURCES += \
         mainwindow.cpp \
         xibridge.cpp \
         editor.cpp \
-    editor.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    xibridge.cpp \
     ui/editorview.cpp \
     ui/editormodel.cpp \
     ui/cell.cpp \
@@ -46,9 +42,6 @@ HEADERS += \
         mainwindow.h \
         xibridge.h \
         editor.h \
-    editor.h \
-    mainwindow.h \
-    xibridge.h \
     ui/editorview.h \
     ui/editormodel.h \
     ui/cell.h \
