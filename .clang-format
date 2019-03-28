@@ -1,0 +1,16 @@
+---
+BasedOnStyle: LLVM
+AccessModifierOffset: '-4'
+AlignOperands: 'false'
+AllowShortBlocksOnASingleLine: 'true'
+AllowShortIfStatementsOnASingleLine: 'true'
+ColumnLimit: '0'
+IndentWidth: '4'
+Language: Cpp
+SortIncludes: 'true'
+Standard: Cpp11
+TabWidth: '4'
+UseTab: Never
+SpacesBeforeTrailingComments: '1'
+
+...

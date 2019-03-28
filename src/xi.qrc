@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/icons/xi-editor.png</file>
+        <file>resources/icons/xi-editor-app.png</file>
+        <file>resources/icons/xi-editor.ico</file>
+        <file>resources/qss/scroll_bar.qss</file>
+    </qresource>
+</RCC>
