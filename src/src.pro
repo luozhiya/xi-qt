@@ -26,12 +26,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 RC_ICONS += resources/icons/xi-editor.ico
 
 SOURCES += \
-        main.cpp \
-        ximainwindow.cpp \
-    theme.cpp \
     main.cpp \
-    theme.cpp \
     ximainwindow.cpp \
+    theme.cpp \
     application.cpp \
     shortcuts.cpp \
     trace.cpp \
@@ -53,10 +50,8 @@ SOURCES += \
     config.cpp
 
 HEADERS += \
-        ximainwindow.h \
-    theme.h \
-    theme.h \
     ximainwindow.h \
+    theme.h \
     application.h \
     shortcuts.h \
     trace.h \
@@ -87,3 +82,5 @@ RESOURCES += \
 
 INCLUDEPATH += $$PWD/../third_party/boost/include/boost-1_67
 DEPENDPATH += $$PWD/../third_party/boost/include/boost-1_67
+
+CONFIG += c++1z
