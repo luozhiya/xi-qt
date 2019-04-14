@@ -1,4 +1,5 @@
 proj.pro.user
+*.vcxproj.user
 
 /src/xi-qt.vcxproj
 /src/xi-qt.vcxproj.filters
