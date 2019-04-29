@@ -5,9 +5,11 @@
 #include <QtConcurrent>
 #include <QtGlobal>
 
+#include "magic_enum.hpp"
+
 namespace xi {
 
-static const char *XI_CORE = "xi-core";
+static constexpr const char *XI_CORE = "xi-core";
 
 CoreConnection::CoreConnection(QObject *parent) : QObject(parent) {
     m_rpcIndex = 0;
@@ -33,7 +35,7 @@ void CoreConnection::init() {
     m_process->waitForStarted();
 }
 
-void CoreConnection::unint() {
+void CoreConnection::uninit() {
     m_process->close();
     m_process->waitForFinished();
     m_process.reset();
@@ -41,39 +43,29 @@ void CoreConnection::unint() {
     m_recvStderrBuf.reset();
 }
 
-enum NotificationType {
-    Notification_Update = 0,
-    Notification_ScrollTo,
-    Notification_DefStyle,
-    Notification_PluginStarted,
-    Notification_PluginStopped,
-    Notification_AvailableThemes,
-    Notification_ThemeChanged,
-    Notification_AvailablePlugins,
-    Notification_UpdateCmds,
-    Notification_ConfigChanged,
-    Notification_Alert,
-    Notification_Unknown,
+enum class Notification {
+    update,
+    scroll_to,
+    def_style,
+    plugin_started,
+    plugin_stopped,
+    available_themes,
+    theme_changed,
+    available_plugins,
+    update_cmds,
+    config_changed,
+    alert,
+    unknown,
 };
 
-static QHash<QString, NotificationType> notificationMap;
-
-static NotificationType to_notification(QString name) {
-    if (notificationMap.size() == 0) {
-        notificationMap["update"] = Notification_Update;
-        notificationMap["scroll_to"] = Notification_ScrollTo;
-        notificationMap["def_style"] = Notification_DefStyle;
-        notificationMap["plugin_started"] = Notification_PluginStarted;
-        notificationMap["plugin_stopped"] = Notification_PluginStopped;
-        notificationMap["available_themes"] = Notification_AvailableThemes;
-        notificationMap["theme_changed"] = Notification_ThemeChanged;
-        notificationMap["available_plugins"] = Notification_AvailablePlugins;
-        notificationMap["update_cmds"] = Notification_UpdateCmds;
-        notificationMap["config_changed"] = Notification_ConfigChanged;
-        notificationMap["alert"] = Notification_Alert;
+Notification to_notification(const QString &x) {
+    auto notification = magic_enum::enum_cast<Notification>(x.toStdString());
+    if (notification.has_value()) {
+        return notification.value();
     }
-    return notificationMap.value(name, Notification_Unknown);
+    return Notification::unknown;
 }
+
 
 void CoreConnection::sendNotification(const QString &method, const QJsonObject &params) {
     QJsonObject object;
@@ -335,27 +327,27 @@ void CoreConnection::handleNotification(const QJsonObject &json) {
     auto viewIdentifier = params["view_id"].toString();
 
     switch (to_notification(method)) {
-    case Notification_Update: {
+    case Notification::update: {
         auto update = params["update"].toObject();
         emit updateReceived(viewIdentifier, update);
     } break;
-    case Notification_ScrollTo: {
+    case Notification::scroll_to: {
         auto line = params["line"].toInt();
         auto column = params["col"].toInt();
         emit scrollReceived(viewIdentifier, line, column);
     } break;
-    case Notification_DefStyle: {
+    case Notification::def_style: {
         emit defineStyleReceived(params);
     } break;
-    case Notification_PluginStarted: {
+    case Notification::plugin_started: {
         auto name = params["plugin"].toString();
         emit pluginStartedReceived(viewIdentifier, name);
     } break;
-    case Notification_PluginStopped: {
+    case Notification::plugin_stopped: {
         auto name = params["plugin"].toString();
         emit pluginStoppedReceived(viewIdentifier, name);
     } break;
-    case Notification_AvailableThemes: {
+    case Notification::available_themes: {
         QStringList themes;
         QJsonArray array = params["themes"].toArray();
         foreach (const QJsonValue &v, array) {
@@ -363,16 +355,16 @@ void CoreConnection::handleNotification(const QJsonObject &json) {
         }
         emit availableThemesReceived(themes);
     } break;
-    case Notification_ThemeChanged: {
+    case Notification::theme_changed: {
         auto name = params["name"].toString();
         auto theme = params["theme"].toObject();
         emit themeChangedReceived(name, theme);
     } break;
-    case Notification_AvailablePlugins: {
+    case Notification::available_plugins: {
         QJsonObject plugins = params["plugins"].toObject();
         emit availablePluginsReceived(viewIdentifier, plugins);
     } break;
-    case Notification_UpdateCmds: {
+    case Notification::update_cmds: {
         //auto plugin = params["plugin"].toString();
         //QList<QJsonObject> cmds;
         //QJsonArray array = params["cmds"].toArray();
@@ -381,15 +373,15 @@ void CoreConnection::handleNotification(const QJsonObject &json) {
         //}
         //emit updateCommandsReceived(viewIdentifier, line, column);
     } break;
-    case Notification_ConfigChanged: {
+    case Notification::config_changed: {
         auto changes = params["changes"].toObject();
         emit configChangedReceived(viewIdentifier, changes);
     } break;
-    case Notification_Alert: {
+    case Notification::alert: {
         auto message = params["msg"].toString();
         emit alertReceived(message);
     } break;
-    case Notification_Unknown:
+    case Notification::unknown:
     default: {
         qDebug() << "unknown notification: " << method;
     } break;

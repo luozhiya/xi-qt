@@ -40,14 +40,11 @@ private:
 class CoreConnection : public QObject {
     Q_OBJECT
 
-    friend class ReadCoreWorker;
-    friend class WriteCoreWorker;
-
 public:
     explicit CoreConnection(QObject *parent = nullptr);
     ~CoreConnection();
     void init();
-    void unint();
+    void uninit();
 
 private:
     void startCorePipeThread();
@@ -95,8 +92,6 @@ signals:
     void updateCommandsReceived(const QString &viewId, const QStringList &commands);
     void configChangedReceived(const QString &viewId, const QJsonObject &changes);
     void alertReceived(const QString &text);
-
-    void jsonQueued();
 
 public slots:
     void stdoutReceivedHandler();

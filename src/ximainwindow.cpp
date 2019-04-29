@@ -9,9 +9,9 @@
 
 namespace xi {
 
-static const char *XI_CONFIG_DIR = "XI_CONFIG_DIR";
-static const char *XI_PLUGINS = "plugins";
-static const char *XI_THEME = "InspiredGitHub"; // "base16-eighties.dark" // "InspiredGitHub"
+static constexpr const char *XI_CONFIG_DIR = "XI_CONFIG_DIR";
+static constexpr const char *XI_PLUGINS = "plugins";
+static constexpr const char *XI_THEME = "InspiredGitHub"; // "base16-eighties.dark" // "InspiredGitHub"
 
 XiMainWindow::XiMainWindow(QWidget *parent) : QMainWindow(parent) {
     setupUI();
@@ -78,7 +78,7 @@ void XiMainWindow::closeEvent(QCloseEvent *event) {
     // notify save
 
     // exit core process
-     m_coreConnection->unint();
+     m_coreConnection->uninit();
 }
 
 

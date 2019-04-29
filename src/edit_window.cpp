@@ -15,7 +15,7 @@
 
 namespace xi {
 
-static const char *UNTITLED_NAME = "untitled";
+static constexpr const char *UNTITLED_NAME = "untitled";
 
 EditWindow::EditWindow(QWidget *parent) : QTabWidget(parent) {
     setContentsMargins(0, 0, 0, 0);

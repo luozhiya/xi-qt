@@ -7,7 +7,7 @@
 namespace xi {
 
 // https://docs.rs/syntect/2.1.0/syntect/highlighting/struct.ThemeSettings.html
-static const char *names[] = {
+static constexpr const char *names[] = {
     "accent",                        // A color made available for use by the theme.
     "active_guide",                  // Color of the guide lined up with the caret. Only applied if the indent_guide_options setting is set to draw_active.
     "background",                    // The default backgound color of the view.

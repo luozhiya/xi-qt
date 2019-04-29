@@ -13,7 +13,7 @@
 
 namespace xi {
 
-static const char *CONTENT_FONT = "Inconsolata";
+static constexpr const char *CONTENT_FONT = "Inconsolata";
 
 ContentView::ContentView(
     std::shared_ptr<File> file,

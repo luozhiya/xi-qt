@@ -22,13 +22,14 @@
 namespace xi {
 
 enum class TraceCategory {
-    Main,
-    Rpc,
+    main,
+    rpc,
 };
+
 enum class TracePhase {
-    Begin,
-    End,
-    Instant,
+    B, //begin
+    E, //end
+    I, //instant
 };
 
 QString to_string(TraceCategory tc);

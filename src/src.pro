@@ -83,4 +83,7 @@ RESOURCES += \
 INCLUDEPATH += $$PWD/../third_party/boost/include/boost-1_67
 DEPENDPATH += $$PWD/../third_party/boost/include/boost-1_67
 
+INCLUDEPATH += $$PWD/../third_party/magic_enum
+DEPENDPATH += $$PWD/../third_party/magic_enum
+
 CONFIG += c++1z

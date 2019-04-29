@@ -6,7 +6,7 @@
 
 namespace xi {
 
-static const char *names[] = {
+static constexpr const char *names[] = {
     "auto_indent",
     "font_face",
     "font_size",

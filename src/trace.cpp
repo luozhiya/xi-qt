@@ -1,5 +1,7 @@
 #include "trace.h"
 
+#include "magic_enum.hpp"
+
 namespace xi {
 
 Trace *Trace::shared() {
@@ -87,30 +89,20 @@ Trace::Trace() {
     m_buf = std::make_unique<std::vector<TraceEntry>>(BUF_SIZE);
 }
 
-struct EnumClassHash {
-    template <typename T>
-    std::size_t operator()(T t) const {
-        return static_cast<std::size_t>(t);
-    }
-};
-
 QString to_string(TraceCategory tc) {
-    static std::unordered_map<TraceCategory, QString, EnumClassHash> xmap;
-    if (xmap.size() == 0) {
-        xmap[TraceCategory::Main] = "main";
-        xmap[TraceCategory::Rpc] = "rpc";
+    auto name = magic_enum::enum_name(tc);
+    if (name.has_value()) {
+        return name.value().data();
     }
-    return xmap[tc];
+    return QString();
 }
 
 QString to_string(TracePhase tp) {
-    static std::unordered_map<TracePhase, QString, EnumClassHash> xmap;
-    if (xmap.size() == 0) {
-        xmap[TracePhase::Begin] = "B";
-        xmap[TracePhase::End] = "E";
-        xmap[TracePhase::Instant] = "I";
+    auto name = magic_enum::enum_name(tp);
+    if (name.has_value()) {
+        return name.value().data();
     }
-    return xmap[tp];
+    return QString();
 }
 
 } // namespace xi

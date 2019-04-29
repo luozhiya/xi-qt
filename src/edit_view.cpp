@@ -23,7 +23,7 @@
 
 namespace xi {
 
-static const char *FPS_FONT = "Inconsolata";
+static constexpr const char *FPS_FONT = "Inconsolata";
 
 EditView::EditView(std::shared_ptr<File> file, std::shared_ptr<CoreConnection> connection, QWidget *parent) : QWidget(parent) {
 
