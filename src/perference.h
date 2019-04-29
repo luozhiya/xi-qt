@@ -13,15 +13,15 @@ class Perference {
 public:
     static Perference *shared();
 
-    std::shared_ptr<Theme> theme() const {
+    inline std::shared_ptr<Theme> theme() const {
         return m_theme;
     }
 
-    std::shared_ptr<StyleMap> styleMap() const {
+    inline std::shared_ptr<StyleMap> styleMap() const {
         return m_styleMap;
     }
 
-    std::shared_ptr<Config> config() const {
+    inline std::shared_ptr<Config> config() const {
         return m_config;
     }
 

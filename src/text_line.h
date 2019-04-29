@@ -75,16 +75,16 @@ public:
     int xToIndex(qreal x);
     qreal indexTox(int ix);
 
-    qreal width() const {
+    inline qreal width() const {
         return m_width;
     }
-    std::shared_ptr<QTextLayout> layout() const {
+    inline std::shared_ptr<QTextLayout> layout() const {
         return m_layout;
     }
-    std::shared_ptr<QFontMetricsF> metrics() const {
+    inline std::shared_ptr<QFontMetricsF> metrics() const {
         return m_fontMetrics;
     }
-    std::shared_ptr<QList<SelRange>> selRanges() const {
+    inline std::shared_ptr<QList<SelRange>> selRanges() const {
         return m_selRanges;
     }
 

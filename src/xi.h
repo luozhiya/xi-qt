@@ -55,8 +55,6 @@ public:
     INTERFACE(cut);
     INTERFACE(paste);
 
-    //void insertChar(const QString &text);
-
     Xi();
 private:
 

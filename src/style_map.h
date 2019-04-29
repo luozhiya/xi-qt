@@ -35,6 +35,7 @@ public:
         m_inner = mutex;
         m_inner->lock();
     }
+
     ~StyleMapLocked() {
         m_inner->unlock();
     }
