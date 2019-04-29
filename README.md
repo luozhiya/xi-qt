@@ -19,7 +19,7 @@ Screenshot
 
 ### Requirements
 - Qt5 (Tested 5.12.2)
-- Visual Studio 2017
+- Visual Studio 2019
 - Windows OS 64bit (Tested Windows 10)
 
 ### Building xi-qt
