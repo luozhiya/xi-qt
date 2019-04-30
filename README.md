@@ -18,9 +18,9 @@ Screenshot
 ## Getting started
 
 ### Requirements
-- Qt5 (Tested 5.12.2)
+- QT5 (Tested 5.12.2)
 - Visual Studio 2019
-- Windows OS 64bit (Tested Windows 10)
+- Windows OS 64Bit (Tested Windows 10 17763.437)
 
 ### Building xi-qt
 - Building core
@@ -40,13 +40,42 @@ Screenshot
 ### Syntax
 - syntect plugin 
 
+### Shortcuts
+- Open (Ctrl+O)
+- Close (Ctrl+W)
+- Save (Ctrl+S)
+- New (Ctrl+N)
 
 ## Roadmap
-- IME
+
+### Next
+- Drag file
+- Notification
+- Improve selection
+- Find/Replace
+- Preferences
+- Hover
+- Menu
+- Statusbar
+- Quick open
+- Command palette
+
+### Future/Long-term
+- Blink cursor
+- Effective text layout
 - OpenGL
-- Improve relayout
+- SIMD
 - Portable (Linux)
 
+### Completed
+- Mouse interactive (input/selection)
+- Multi input
+- Saving
+- Copy/Paste/Cut
+- Shortcuts
+- IME
+- Gutter
+- Undo/Redo
 
 ## Links
 [xi-editor](https://github.com/xi-editor/xi-editor)
