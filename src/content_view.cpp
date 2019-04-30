@@ -37,6 +37,13 @@ ContentView::ContentView(
 
     m_dataSource = std::make_shared<DataSource>();
 
+    m_imeComposition = std::make_unique<QLabel>(this);
+    m_imeComposition->setVisible(false);
+    m_imeComposition->setTextFormat(Qt::PlainText);
+    m_imeComposition->setTextInteractionFlags(Qt::NoTextInteraction);
+    m_imeComposition->setAutoFillBackground(true);
+    m_imeComposition->setFont(m_dataSource->defaultFont->getFont());
+
     m_padding.setLeft(2);
     m_padding.setTop(0);
     m_padding.setRight(0);
@@ -172,6 +179,7 @@ void ContentView::paint(QPainter &renderer, const QRect &dirtyRect) {
     //	}
     //}
 
+	m_cursorCache.clear();
     // fourth pass: draw carets
     for (auto lineIx = first; lineIx < last; ++lineIx) {
         auto relLineIx = lineIx - first;
@@ -183,7 +191,8 @@ void ContentView::paint(QPainter &renderer, const QRect &dirtyRect) {
             foreach (int cursor, *cursors) {
                 auto x0 = xOff + textLine->indexTox(cursor) - 0.5f;
                 Painter::drawCursor(renderer, x0, y0, 2, linespace, theme->caret());
-            }
+                m_cursorCache.push_back(QPoint(x0, y0));
+			}
         }
     }
 
@@ -630,6 +639,50 @@ QMarginsF ContentView::getPadding() {
 void ContentView::tick() {
     auto editView = dynamic_cast<EditView *>(parent());
     editView->tick();
+}
+
+void ContentView::inputMethodEvent(QInputMethodEvent *event) {
+    if (!event->commitString().isEmpty()) {
+        auto text = event->commitString();
+        insertChar(text);
+        showImeComposition("");
+    } else {
+        showImeComposition(event->preeditString());
+    }
+}
+
+void ContentView::showImeComposition(const QString &text) {
+    m_imeComposition->setText(text);
+    if (text.isEmpty()) {
+        m_imeComposition->hide();
+        return;
+    }
+
+    if (!m_imeComposition->isVisible()) {
+        int h = m_dataSource->fontMetrics->height();
+        m_imeComposition->setMinimumHeight(h);
+        m_imeComposition->move(m_cursorCache.front());
+        m_imeComposition->show();
+    }
+
+    m_imeComposition->setMinimumWidth(QFontMetricsF(m_imeComposition->font()).width(text));
+    m_imeComposition->setMaximumWidth(QFontMetricsF(m_imeComposition->font()).width(text));
+    m_imeComposition->update();
+}
+
+QVariant ContentView::inputMethodQuery(Qt::InputMethodQuery query) const {
+    if (query == Qt::ImEnabled) {
+        return true;
+    } else if (query == Qt::ImFont) {
+        return m_imeComposition->font();
+    } else if (query == Qt::ImCursorRectangle) {
+        if (!m_cursorCache.isEmpty()) {
+            int h = m_dataSource->fontMetrics->height();
+            auto pos = m_cursorCache.front();
+            return QRect(pos, QSize(2, h));
+        }
+    }
+    return QVariant();
 }
 
 AsyncPaintTimer::AsyncPaintTimer(QWidget *parent) {

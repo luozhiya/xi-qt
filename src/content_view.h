@@ -12,6 +12,7 @@
 #include <QQueue>
 #include <QScrollArea>
 #include <QTimer>
+#include <QLabel>
 
 #include <memory>
 
@@ -96,6 +97,10 @@ protected:
     virtual void mouseMoveEvent(QMouseEvent *e) override;
     virtual void mouseReleaseEvent(QMouseEvent *e) override;
     virtual void mouseDoubleClickEvent(QMouseEvent *e) override;
+
+	virtual QVariant inputMethodQuery(Qt::InputMethodQuery) const Q_DECL_OVERRIDE;
+    virtual void inputMethodEvent(QInputMethodEvent *event) Q_DECL_OVERRIDE;
+    void showImeComposition(const QString &text);
 
     void paint(QPainter &renderer, const QRect &dirtyRect);
     void initSelectCommand();
@@ -200,6 +205,8 @@ public:
     void themeChangedHandler();
 
 private:
+    std::unique_ptr<QLabel> m_imeComposition;
+    QVector<QPoint> m_cursorCache;
     std::shared_ptr<File> m_file;
     std::shared_ptr<CoreConnection> m_connection;
     std::shared_ptr<DataSource> m_dataSource; //owned
