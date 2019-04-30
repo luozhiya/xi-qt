@@ -26,6 +26,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 RC_ICONS += resources/icons/xi-editor.ico
 
 SOURCES += \
+	base.cpp \
     main.cpp \
     ximainwindow.cpp \
     theme.cpp \
@@ -50,6 +51,7 @@ SOURCES += \
     config.cpp
 
 HEADERS += \
+	base.h \
     ximainwindow.h \
     theme.h \
     application.h \
