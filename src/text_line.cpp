@@ -25,8 +25,8 @@ int TextLine::xToIndex(qreal x) {
 qreal TextLine::indexTox(int ix) {
     if (m_layout->lineCount() > 0) {
         auto innerLine = m_layout->lineAt(0);
-        auto utf8ix = m_text.toUtf8().mid(0, ix).length();
-        auto x = innerLine.cursorToX(utf8ix);
+        auto count = QString(m_text.toUtf8().mid(0, ix)).count();
+        auto x = innerLine.cursorToX(count);
         return x;
     }
     return 0;
