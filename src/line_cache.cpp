@@ -105,12 +105,12 @@ InvalSet LineCacheState::applyUpdate(const QJsonObject &json) {
     CacheLines newLines;
 
     auto ops = json["ops"].toArray();
-    for (auto opref : ops) {
-        auto op = opref.toObject();
-        auto opTypeStr = op["op"].toString();
-        auto opType = to_enum(opTypeStr, Op::unknown);
-        auto n = op["n"].toInt();
-        switch (opType) {
+    for (auto opRef : ops) {
+        auto opObj = opRef.toObject();
+        auto opStr = opObj["op"].toString();
+        auto op = to_enum(opStr, Op::unknown);
+        auto n = opObj["n"].toInt();
+        switch (op) {
         case Op::invalidate: {
             auto curLine = newInvalidBefore + newLines.size() + newInvalidAfter;
             auto ix = curLine - m_invalidBefore;
@@ -133,7 +133,7 @@ InvalSet LineCacheState::applyUpdate(const QJsonObject &json) {
             }
             newInvalidAfter = 0;
             inval.addRangeN(newInvalidBefore + newLines.count(), n);
-            QJsonArray jsonLines = op["lines"].toArray();
+            QJsonArray jsonLines = opObj["lines"].toArray();
             for (auto jsonLine : jsonLines) {
                 newLines.push_back(std::make_shared<Line>(jsonLine.toObject()));
             }
@@ -157,12 +157,12 @@ InvalSet LineCacheState::applyUpdate(const QJsonObject &json) {
                 }
                 newInvalidAfter = 0;
                 auto nCopy = qMin(nRemaining, m_invalidBefore + (int)m_lines.size() - oldIdx);
-                if (oldIdx != newInvalidBefore + newLines.size() || opType != Op::copy) {
+                if (oldIdx != newInvalidBefore + newLines.size() || op != Op::copy) {
                     inval.addRangeN(newInvalidBefore + newLines.count(), nCopy);
                 }
                 auto startIx = oldIdx - m_invalidBefore;
-                if (opType == Op::copy) {
-                    auto ln = op["ln"].toInt();
+                if (op == Op::copy) {
+                    auto ln = opObj["ln"].toInt();
                     auto lineNumber = ln;
                     for (auto i = startIx; i < startIx + nCopy; ++i) {
                         if (m_lines[i]) {
@@ -172,7 +172,7 @@ InvalSet LineCacheState::applyUpdate(const QJsonObject &json) {
                         newLines.push_back(std::move(m_lines[i]));
                     }
                 } else { // Op::update
-                    QJsonArray jsonLines = op["lines"].toArray();
+                    QJsonArray jsonLines = opObj["lines"].toArray();
                     auto jsonIx = n - nRemaining;
                     for (auto ix = startIx; ix < startIx + nCopy; ++ix) {
                         newLines.push_back(std::make_shared<Line>(m_lines[ix], jsonLines[ix].toObject()));
@@ -193,7 +193,7 @@ InvalSet LineCacheState::applyUpdate(const QJsonObject &json) {
             oldIdx += n;
             break;
         default:
-            qDebug() << "unknown op type " << opTypeStr;
+            qDebug() << "unknown op type " << opStr;
             break;
         }
     }
