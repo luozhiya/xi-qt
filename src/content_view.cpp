@@ -213,7 +213,7 @@ void ContentView::paint(QPainter &renderer, const QRect &dirtyRect) {
         auto x = 10;
         auto y0 = yOff + m_dataSource->fontMetrics->ascent() + linespace * (lineIx - 1);
         auto builder = std::make_shared<TextLineBuilder>(QString::number(gutterNumber), font);
-        builder->setFgColor(QColor(255, 255, 255)); // theme->gutter_foreground()
+        builder->setFgColor(theme->foreground()); // theme->gutter_foreground()
         auto textLine = builder->build(true);
         Painter::drawLine(renderer, textLine, x, y0);
     }
