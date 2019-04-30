@@ -5,7 +5,7 @@
 #include <QtConcurrent>
 #include <QtGlobal>
 
-#include "magic_enum.hpp"
+#include "base.h"
 
 namespace xi {
 
@@ -57,15 +57,6 @@ enum class Notification {
     alert,
     unknown,
 };
-
-Notification to_notification(const QString &x) {
-    auto notification = magic_enum::enum_cast<Notification>(x.toStdString());
-    if (notification.has_value()) {
-        return notification.value();
-    }
-    return Notification::unknown;
-}
-
 
 void CoreConnection::sendNotification(const QString &method, const QJsonObject &params) {
     QJsonObject object;
@@ -326,7 +317,7 @@ void CoreConnection::handleNotification(const QJsonObject &json) {
     auto params = json["params"].toObject();
     auto viewIdentifier = params["view_id"].toString();
 
-    switch (to_notification(method)) {
+    switch (to_enum(method, Notification::unknown)) {
     case Notification::update: {
         auto update = params["update"].toObject();
         emit updateReceived(viewIdentifier, update);
