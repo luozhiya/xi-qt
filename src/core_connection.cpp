@@ -179,7 +179,7 @@ void CoreConnection::sendDrag(const QString &viewId, qint64 line, qint64 column,
     sendEditArray(viewId, "drag", object);
 }
 
-void CoreConnection::sendGesture(const QString &viewId, qint64 line, qint64 col, const QString &ty) {
+void CoreConnection::sendGesture(const QString &viewId, qint64 line, qint64 col, const QJsonObject &ty) {
     QJsonObject object;
     object["line"] = line;
     object["col"] = col;

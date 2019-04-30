@@ -67,7 +67,7 @@ public:
     void sendScroll(const QString &viewId, qint64 firstLine, qint64 lastLine);
     void sendClick(const QString &viewId, qint64 line, qint64 column, qint64 modifiers, qint64 clickCount);
     void sendDrag(const QString &viewId, qint64 line, qint64 column, qint64 modifiers);
-    void sendGesture(const QString &viewId, qint64 line, qint64 col, const QString &ty);
+    void sendGesture(const QString &viewId, qint64 line, qint64 col, const QJsonObject &ty);
     void sendFind(const QString &viewId, const QString &chars, bool caseSensitive, const ResponseHandler &handler);
     void sendFindNext(const QString &viewId, bool wrapAround, bool allowSame);
     void sendFindPrevious(const QString &viewId, bool wrapAround);

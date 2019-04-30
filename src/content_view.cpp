@@ -537,15 +537,45 @@ void ContentView::keyPressEvent(QKeyEvent *ev) {
     }
 }
 
+QJsonObject clickGestureType(QMouseEvent *e, int count) {
+    QJsonObject select;
+    QJsonObject param;
+    QString granularity;
+
+    if (count == 3)
+        granularity = "line";
+    else if (count == 2)
+        granularity = "word";
+    else
+        granularity = "point";
+
+    auto modifiers = e->modifiers();
+    auto ctrl = (modifiers & Qt::ControlModifier);
+    auto shift = (modifiers & Qt::ShiftModifier);
+
+    if (shift) {
+        param["granularity"] = granularity;
+        select["select_extend"] = param;
+    } else {
+        param["granularity"] = granularity;
+        param["multi"] = ctrl ? true : false;
+        select["select"] = param;
+    }
+
+    return select;
+}
+
 void ContentView::mousePressEvent(QMouseEvent *e) {
     if (m_mouseDoubleCheckTimer.remainingTime() > 0) {
         return;
     }
 
     setFocus();
-    auto lc = getLineColumn(e->pos());
+    auto pos = e->pos();
+    pos -= {getXOff(), 0};
+    auto lc = getLineColumn(pos);
     if (lc.isValid()) {
-        m_connection->sendGesture(m_file->viewId(), lc.line(), lc.column(), "point_select");
+        m_connection->sendGesture(m_file->viewId(), lc.line(), lc.column(), clickGestureType(e, 1));
         m_drag = true;
     }
     QWidget::mousePressEvent(e);
@@ -554,7 +584,9 @@ void ContentView::mousePressEvent(QMouseEvent *e) {
 void ContentView::mouseMoveEvent(QMouseEvent *e) {
     if (m_drag) {
         setFocus();
-        auto lc = getLineColumn(e->pos());
+        auto pos = e->pos();
+        pos -= {getXOff(), 0};
+        auto lc = getLineColumn(pos);
         if (lc.isValid())
             m_connection->sendDrag(m_file->viewId(), lc.line(), lc.column(), 0);
         // TODO:
@@ -572,12 +604,14 @@ void ContentView::mouseReleaseEvent(QMouseEvent *e) {
 
 void ContentView::mouseDoubleClickEvent(QMouseEvent *e) {
     setFocus();
-    auto lc = getLineColumn(e->pos());
+    auto pos = e->pos();
+    pos -= {getXOff(), 0};
+    auto lc = getLineColumn(pos);
     if (lc.isValid()) {
         m_mouseDoubleCheckTimer.setSingleShot(true);
         m_mouseDoubleCheckTimer.start(100);
 
-        m_connection->sendGesture(m_file->viewId(), lc.line(), lc.column(), "word_select");
+        m_connection->sendGesture(m_file->viewId(), lc.line(), lc.column(), clickGestureType(e, 2));
     }
     QWidget::mouseDoubleClickEvent(e);
 }
