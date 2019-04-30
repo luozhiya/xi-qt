@@ -1,6 +1,6 @@
 #include "trace.h"
 
-#include "magic_enum.hpp"
+#include "base.h"
 
 namespace xi {
 
@@ -87,22 +87,6 @@ QJsonDocument Trace::snapshot() {
 
 Trace::Trace() {
     m_buf = std::make_unique<std::vector<TraceEntry>>(BUF_SIZE);
-}
-
-QString to_string(TraceCategory tc) {
-    auto name = magic_enum::enum_name(tc);
-    if (name.has_value()) {
-        return name.value().data();
-    }
-    return QString();
-}
-
-QString to_string(TracePhase tp) {
-    auto name = magic_enum::enum_name(tp);
-    if (name.has_value()) {
-        return name.value().data();
-    }
-    return QString();
 }
 
 } // namespace xi

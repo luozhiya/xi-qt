@@ -32,9 +32,6 @@ enum class TracePhase {
     I, //instant
 };
 
-QString to_string(TraceCategory tc);
-QString to_string(TracePhase tp);
-
 struct TraceEntry {
     QString name;
     TraceCategory cat;
