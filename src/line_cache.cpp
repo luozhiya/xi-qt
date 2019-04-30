@@ -7,11 +7,11 @@
 
 #include "core_connection.h"
 
-#include "magic_enum.hpp"
+#include "base.h"
 
 namespace xi {
 
-enum class Ops {
+enum class Op {
     invalidate,
     ins,
     copy,
@@ -19,14 +19,6 @@ enum class Ops {
     skip,
     unknown,
 };
-
-static Ops to_ops(const QString &name) {
-    auto ops = magic_enum::enum_cast<Ops>(name.toStdString());
-    if (ops.has_value()) {
-        return ops.value();
-    }
-    return Ops::unknown;
-}
 
 Line::Line(const QJsonObject &json) {
     m_assoc = nullptr;
@@ -97,11 +89,10 @@ InvalSet LineCacheState::applyUpdate(const QJsonObject &json) {
     for (auto opref : ops) {
         auto op = opref.toObject();
         auto opTypeStr = op["op"].toString();
-        //qDebug() << "update--> op type: " << opTypeStr;
-        auto opType = to_ops(opTypeStr);
+        auto opType = to_enum(opTypeStr, Op::unknown);
         auto n = op["n"].toInt();
         switch (opType) {
-        case Ops::invalidate: {
+        case Op::invalidate: {
             auto curLine = newInvalidBefore + newLines.size() + newInvalidAfter;
             auto ix = curLine - m_invalidBefore;
             if (ix + n > 0 && ix < m_lines.size()) {
@@ -117,7 +108,7 @@ InvalSet LineCacheState::applyUpdate(const QJsonObject &json) {
                 newInvalidAfter += n;
             }
         } break;
-        case Ops::ins: {
+        case Op::ins: {
             for (int i = 0; i < newInvalidAfter; ++i) {
                 newLines.push_back(nullptr);
             }
@@ -128,8 +119,8 @@ InvalSet LineCacheState::applyUpdate(const QJsonObject &json) {
                 newLines.push_back(std::make_shared<Line>(jsonLine.toObject()));
             }
         } break;
-        case Ops::copy:
-        case Ops::update: {
+        case Op::copy:
+        case Op::update: {
             auto nRemaining = n;
             if (oldIdx < m_invalidBefore) {
                 auto nInvalid = qMin(n, m_invalidBefore - oldIdx);
@@ -147,15 +138,15 @@ InvalSet LineCacheState::applyUpdate(const QJsonObject &json) {
                 }
                 newInvalidAfter = 0;
                 auto nCopy = qMin(nRemaining, m_invalidBefore + (int)m_lines.size() - oldIdx);
-                if (oldIdx != newInvalidBefore + newLines.size() || opType != Ops::copy) {
+                if (oldIdx != newInvalidBefore + newLines.size() || opType != Op::copy) {
                     inval.addRangeN(newInvalidBefore + newLines.count(), nCopy);
                 }
                 auto startIx = oldIdx - m_invalidBefore;
-                if (opType == Ops::copy) {
+                if (opType == Op::copy) {
                     for (auto i = startIx; i < startIx + nCopy; ++i) {
                         newLines.push_back(std::move(m_lines[i]));
                     }
-                } else { // Ops_Update
+                } else { // Op::update
                     QJsonArray jsonLines = op["lines"].toArray();
                     auto jsonIx = n - nRemaining;
                     for (auto ix = startIx; ix < startIx + nCopy; ++ix) {
@@ -173,7 +164,7 @@ InvalSet LineCacheState::applyUpdate(const QJsonObject &json) {
             }
             oldIdx += nRemaining;
         } break;
-        case Ops::skip:
+        case Op::skip:
             oldIdx += n;
             break;
         default:
