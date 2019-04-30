@@ -32,7 +32,8 @@ public:
     std::shared_ptr<LineCache> lines;
     std::shared_ptr<Config> config;
     std::shared_ptr<QFontMetricsF> fontMetrics;
-    qreal gutterWidth;
+    int gutterWidth;
+    int gutterOne;
 };
 
 class LineColumn {

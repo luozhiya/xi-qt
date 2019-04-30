@@ -39,6 +39,14 @@ Line::Line(const QJsonObject &json) {
         } else {
             m_styles->clear();
         }
+        if (json.contains("ln")) {
+            auto jsonNumber = json["ln"];
+            if (jsonNumber.isNull()) {
+                // soft break
+            } else {
+                m_number = jsonNumber.toInt();
+            }
+        }
     }
 }
 
@@ -61,6 +69,16 @@ Line::Line(std::shared_ptr<Line> line, const QJsonObject &json) {
     } else {
         m_styles = line->m_styles;
     }
+    if (json.contains("ln")) {
+        auto jsonNumber = json["ln"];
+        if (jsonNumber.isNull()) {
+            // soft break
+        } else {
+            m_number = jsonNumber.toInt();
+        }
+    } else {
+        m_number = line->m_number;
+    }
 }
 
 Line &Line::operator=(const Line &line) {
@@ -69,6 +87,7 @@ Line &Line::operator=(const Line &line) {
         m_cursor = line.m_cursor;
         m_styles = line.m_styles;
         m_assoc = line.m_assoc;
+        m_number = line.m_number;
     }
     return *this;
 }
@@ -143,7 +162,13 @@ InvalSet LineCacheState::applyUpdate(const QJsonObject &json) {
                 }
                 auto startIx = oldIdx - m_invalidBefore;
                 if (opType == Op::copy) {
+                    auto ln = op["ln"].toInt();
+                    auto lineNumber = ln;
                     for (auto i = startIx; i < startIx + nCopy; ++i) {
+                        if (m_lines[i]) {
+                            m_lines[i]->setNumber(lineNumber);
+                            lineNumber += 1;
+                        }
                         newLines.push_back(std::move(m_lines[i]));
                     }
                 } else { // Op::update

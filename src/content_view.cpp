@@ -122,6 +122,8 @@ void ContentView::paint(QPainter &renderer, const QRect &dirtyRect) {
         return;
     }
 
+	m_dataSource->gutterWidth = m_dataSource->gutterOne * QString::number(totalLines).count() + 30;
+
     auto font = m_dataSource->defaultFont;
     auto theme = Perference::shared()->theme()->locked();
     auto styleMap = Perference::shared()->styleMap()->locked();
@@ -197,6 +199,24 @@ void ContentView::paint(QPainter &renderer, const QRect &dirtyRect) {
     }
 
     // gutter drawing
+    QRect gutterRect = {
+        0,
+        0,
+        m_dataSource->gutterWidth,
+        dirtyRect.height()};
+    renderer.fillRect(gutterRect, theme->gutter());
+    for (auto lineIx = first; lineIx < last; ++lineIx) {
+        auto relLineIx = lineIx - first;
+        auto line = lines[relLineIx];
+        if (!line) continue;
+        auto gutterNumber = line->number();
+        auto x = 10;
+        auto y0 = yOff + m_dataSource->fontMetrics->ascent() + linespace * (lineIx - 1);
+        auto builder = std::make_shared<TextLineBuilder>(QString::number(gutterNumber), font);
+        builder->setFgColor(QColor(255, 255, 255)); // theme->gutter_foreground()
+        auto textLine = builder->build(true);
+        Painter::drawLine(renderer, textLine, x, y0);
+    }
 }
 
 void ContentView::initSelectCommand() {
@@ -715,7 +735,8 @@ DataSource::DataSource() {
         defaultFont = std::make_shared<Font>(font);
     }
     fontMetrics = std::make_shared<QFontMetricsF>(defaultFont->getFont());
-    gutterWidth = 0;
+    gutterOne = fontMetrics->width('1');
+    gutterWidth = gutterOne;
 }
 
 } // namespace xi

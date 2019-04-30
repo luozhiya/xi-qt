@@ -74,11 +74,17 @@ public:
     inline std::shared_ptr<QList<StyleSpan>> getStyles() const {
         return m_styles;
     }
-    inline void setAssoc(const std::shared_ptr<TextLine> &assoc) {
+    inline void setAssoc(std::shared_ptr<TextLine> assoc) {
         m_assoc = assoc;
     }
     inline std::shared_ptr<TextLine> assoc() const {
         return m_assoc;
+    }
+    inline void setNumber(int n) {
+        m_number = n;
+    }
+    int number() const {
+        return m_number;
     }
 
 private:
@@ -86,6 +92,7 @@ private:
     std::shared_ptr<QList<int>> m_cursor;
     std::shared_ptr<QList<StyleSpan>> m_styles;
     std::shared_ptr<TextLine> m_assoc;
+    int m_number;
 };
 
 class LineCacheState : public UnfairLock {
@@ -116,7 +123,7 @@ public:
     }
 
     void flushAssoc() {
-        foreach (const std::shared_ptr<Line> &line, m_lines) {
+        foreach (std::shared_ptr<Line> &line, m_lines) {
             line->setAssoc(nullptr);
         }
     }

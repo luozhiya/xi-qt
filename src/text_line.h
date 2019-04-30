@@ -141,7 +141,7 @@ public:
     }
 
     // init QTextLayout
-    std::shared_ptr<TextLine> build();
+    std::shared_ptr<TextLine> build(bool buildDefault = false);
 
 private:
     QVector<QTextLayout::FormatRange> m_overrides;

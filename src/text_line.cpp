@@ -32,10 +32,20 @@ qreal TextLine::indexTox(int ix) {
     return 0;
 }
 
-std::shared_ptr<xi::TextLine> TextLineBuilder::build() {
+std::shared_ptr<xi::TextLine> TextLineBuilder::build(bool buildDefault) {
     auto textline = std::make_shared<TextLine>(m_text, m_font);
     int leading = textline->metrics()->leading();
     auto lineWidth = textline->metrics()->width(m_text); // slow
+
+	if (buildDefault) {
+        QTextCharFormat cfmt;
+        QTextLayout::FormatRange fmt;
+        cfmt.setForeground(m_defaultFgColor);
+        fmt.start = 0;
+        fmt.length = lineWidth;
+        fmt.format = cfmt;
+        m_overrides.push_back(fmt);
+    }
 
     foreach (std::shared_ptr<FontSpan> span, m_fontSpans) {
         QTextLayout::FormatRange fmt;
