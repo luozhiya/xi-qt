@@ -123,7 +123,7 @@ public:
     }
 
     void flushAssoc() {
-        foreach (std::shared_ptr<Line> &line, m_lines) {
+        foreach (std::shared_ptr<Line> line, m_lines) {
             line->setAssoc(nullptr);
         }
     }
