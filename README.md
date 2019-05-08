@@ -41,10 +41,13 @@ Screenshot
 - syntect plugin 
 
 ### Shortcuts
-- Open (Ctrl+O)
-- Close (Ctrl+W)
-- Save (Ctrl+S)
-- New (Ctrl+N)
+Command | Keybinding
+--- | --- 
+Open  | Ctrl+O
+Close | Ctrl+W
+Save  | Ctrl+S
+New   | Ctrl+N
+Scroll Test  | F8
 
 ## Roadmap
 
@@ -76,6 +79,7 @@ Screenshot
 - IME
 - Gutter
 - Undo/Redo
+- FPS Counter
 
 ## Links
 [xi-editor](https://github.com/xi-editor/xi-editor)
