@@ -7,14 +7,14 @@
 namespace xi {
 
 template <typename E>
-E to_enum(const QString &name, E default) {
+E to_enum(const QString &name, E e) {
     static_assert(std::is_enum_v<E>, "requires enum type.");
 
     auto result = magic_enum::enum_cast<E>(name.toStdString());
     if (result.has_value()) {
         return result.value();
     }
-    return default;
+    return e;
 }
 
 template <typename E>
