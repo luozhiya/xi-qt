@@ -17,7 +17,6 @@ proj.pro.user
 /src/packages
 .qmake.stash
 /.vs
-/.vs
 xi-qt.sln
 *.ipch
 *.VC.db
