@@ -151,38 +151,20 @@ void EditWindow::keyPressEvent(QKeyEvent *e) {
 }
 
 void EditWindow::setupShortcuts() {
-    {
-        auto seq = QKeySequence("Ctrl+O");
-        Shortcuts::shared()->append(this, seq, [&](QShortcut *shortcut) {
-            shortcut->setContext(Qt::WidgetWithChildrenShortcut);
-            connect(shortcut, &QShortcut::activated,
-                    this, &EditWindow::newTabWithOpenFile);
-        });
-    }
-    {
-        auto seq = QKeySequence("Ctrl+N");
-        Shortcuts::shared()->append(this, seq, [&](QShortcut *shortcut) {
-            shortcut->setContext(Qt::WidgetWithChildrenShortcut);
-            connect(shortcut, &QShortcut::activated,
-                    this, &EditWindow::newTab);
-        });
-    }
-    {
-        auto seq = QKeySequence("Ctrl+W");
-        Shortcuts::shared()->append(this, seq, [&](QShortcut *shortcut) {
-            shortcut->setContext(Qt::WidgetWithChildrenShortcut);
-            connect(shortcut, &QShortcut::activated,
-                    this, &EditWindow::closeCurrentTab);
-        });
-    }
-    {
-        auto seq = QKeySequence("Ctrl+S");
-        Shortcuts::shared()->append(this, seq, [&](QShortcut *shortcut) {
-            shortcut->setContext(Qt::WidgetWithChildrenShortcut);
-            connect(shortcut, &QShortcut::activated,
-                    this, &EditWindow::saveCurrentTab);
-        });
-    }
+    addShortcut("Ctrl+O", &EditWindow::newTabWithOpenFile);
+    addShortcut("Ctrl+N", &EditWindow::newTab);
+    addShortcut("Ctrl+W", &EditWindow::closeCurrentTab);
+    addShortcut("Ctrl+S", &EditWindow::saveCurrentTab);
+}
+
+void EditWindow::addShortcut(QString sequence, void (xi::EditWindow::*functionToCall)()) {
+    auto seq = QKeySequence(sequence);
+
+    Shortcuts::shared()->append(this, seq, [&](QShortcut *shortcut) {
+        shortcut->setContext(Qt::WidgetWithChildrenShortcut);
+        connect(shortcut, &QShortcut::activated,
+                this, functionToCall);
+    });
 }
 
 void EditWindow::setupCoreHandler() {
