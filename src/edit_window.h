@@ -42,6 +42,7 @@ public:
     void saveAllTab();
 
     void setupShortcuts();
+    void addShortcut(QString sequence, void(xi::EditWindow::*functionToCall)());
     void setupCoreHandler();
 
 protected:
